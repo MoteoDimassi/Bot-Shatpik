@@ -1,15 +1,18 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace bot
 {
     internal class Program
     {
        
-        delegate string MyFunc();
+        delegate void MyFunc();
+        static bool flag = true;
         static void Main(string[] args)
         {
             
@@ -29,28 +32,59 @@ namespace bot
                 {"который час?", BotAction.TimeNow }
             };
 
-            Thread t = new Thread(new ThreadStart(BotAction.Hello1));
-            t.Start();
+            BotAction.Hello();
+            ConcurrentQueue<MyFunc> cq = new ConcurrentQueue<MyFunc>();
+            Thread checkQueue = new Thread(new ParameterizedThreadStart(StartReading));
+            checkQueue.Start();
+            
             string str = Input.ConsoleInput();
             while (str != "пока" && str != "до свидания")
             {
                 if (dict.ContainsKey(str))
                 {
-                    Output.ConsoleOutput(dict[str]());
+                    cq.Enqueue(dict[str]);
                 }
                 else if (str.Contains("анекдот"))
                 {
-                    Output.ConsoleOutput(dict["анекдот"]());
+                    cq.Enqueue(dict["анекдот"]);
                 }
                 else
                 {
-                    Output.ConsoleOutput(BotAction.Aphorisms());
+                    cq.Enqueue(BotAction.Aphorisms);
                 }
+                Console.WriteLine(cq.Count);
                 str = Input.ConsoleInput();
             }
-
-           Output.ConsoleOutput("До новых встреч, дорогой собеседник!");
+            flag = false;
+           Console.WriteLine("До новых встреч, дорогой собеседник!");
         }
+       
+        static void StartReading(Object object1)
+        {
+            var cq = (ConcurrentQueue<MyFunc>)object1;
+            while (flag)
+            {
+                Console.WriteLine("задержка");
+                Task.Delay(1000);
+                try
+                {
+                    if (cq.TryDequeue(out MyFunc obj))
+                    {
+                        Console.WriteLine("В очереди что-то есть");
+                        obj();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Я попытался извлечь из очереди, но ничего не получилось(");
+                    }
+                }
+                catch
+                {
+                    
+                }
+                
+            }
             
+        }
     }
 }

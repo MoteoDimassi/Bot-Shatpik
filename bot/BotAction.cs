@@ -7,17 +7,15 @@ namespace bot
 {
     static internal class BotAction
     {
-        static internal string Hello()
+        static internal void Hello()
         {
-            return "Здравствуй, дорогой друг!";
-        }
-        static internal void Hello1()
-        {
+            
             Console.WriteLine("Здравствуй, дорогой друг!");
         }
-        static internal string MyName()
+        
+        static internal void MyName()
         {
-           return "Моё имя Шарпик";
+            Console.WriteLine("Моё имя Шарпик");
         }
         static async internal Task<string> JokeParser()
         {
@@ -30,11 +28,11 @@ namespace bot
             
             return text;
         }
-        static internal string Joke()
+        static internal void Joke()
         {
             var str = JokeParser().Result; ;
-            
-            return str;
+
+            Console.WriteLine(str);
         }
         static async internal Task<string> AphorismsParser()
         {
@@ -48,18 +46,18 @@ namespace bot
 
         }
 
-        static internal string Aphorisms()
+        static internal void Aphorisms()
         {
             string str = AphorismsParser().Result;
-            return str;
+            Console.WriteLine(str);
         }
 
 
-        static internal string TimeNow()
+        static internal void TimeNow()
         {
             DateTime time = DateTime.Now;
             string timeString = time.ToString($"Местное время {time:t}") ;
-            return timeString;
+            Console.WriteLine(timeString);
         }
     }
 }
