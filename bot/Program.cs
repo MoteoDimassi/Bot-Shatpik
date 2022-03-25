@@ -2,11 +2,13 @@
 using AngleSharp.Dom;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace bot
 {
     internal class Program
     {
+       
         delegate string MyFunc();
         static void Main(string[] args)
         {
@@ -27,8 +29,8 @@ namespace bot
                 {"который час?", BotAction.TimeNow }
             };
 
-            
-
+            Thread t = new Thread(new ThreadStart(BotAction.Hello1));
+            t.Start();
             string str = Input.ConsoleInput();
             while (str != "пока" && str != "до свидания")
             {

@@ -8,7 +8,7 @@ namespace bot
 {
     static internal class Output
     {
-        internal static void ConsoleOutput(string output)
+        internal static void ConsoleOutput(Object output)
         {
             Console.WriteLine(output);
         }

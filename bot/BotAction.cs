@@ -11,6 +11,10 @@ namespace bot
         {
             return "Здравствуй, дорогой друг!";
         }
+        static internal void Hello1()
+        {
+            Console.WriteLine("Здравствуй, дорогой друг!");
+        }
         static internal string MyName()
         {
            return "Моё имя Шарпик";
