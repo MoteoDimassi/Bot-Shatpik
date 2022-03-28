@@ -31,11 +31,11 @@ namespace bot
                 {"сколько времени?", BotAction.TimeNow },
                 {"который час?", BotAction.TimeNow }
             };
-
+           
             BotAction.Hello();
             ConcurrentQueue<MyFunc> cq = new ConcurrentQueue<MyFunc>();
             Thread checkQueue = new Thread(new ParameterizedThreadStart(StartReading));
-            checkQueue.Start();
+            checkQueue.Start(cq);
             
             string str = Input.ConsoleInput();
             while (str != "пока" && str != "до свидания")
@@ -62,11 +62,12 @@ namespace bot
         static void StartReading(Object object1)
         {
             var cq = (ConcurrentQueue<MyFunc>)object1;
+            
             while (flag)
             {
-                Console.WriteLine("задержка");
-                Task.Delay(1000);
-                try
+                
+                Task.Delay(5000).Wait();
+                if (cq != null)
                 {
                     if (cq.TryDequeue(out MyFunc obj))
                     {
@@ -78,13 +79,15 @@ namespace bot
                         Console.WriteLine("Я попытался извлечь из очереди, но ничего не получилось(");
                     }
                 }
-                catch
+                else
                 {
-                    
+                    Console.WriteLine("Всё ещё null");
                 }
                 
+
+
             }
-            
+
         }
     }
 }
